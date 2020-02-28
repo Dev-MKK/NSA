@@ -8,17 +8,8 @@ import java.util.*;
 import org.json.*;
 
 public class MyVideosActivity extends Activity 
-implements JsonGetter.Listener, 
-MyListAdapter.Listener, 
-VideoDownloader.Listener 
+implements JsonGetter.Listener
 {
-
-	@Override
-	public void OnVideoDownloded() {
-		refreshList(videosList);
-	}
-	
-
 	@Override
 	public void OnJsonGot(String result)
 	{
@@ -37,7 +28,7 @@ VideoDownloader.Listener
             	video.date = jo.getString("date"); 
             	videosList.add(video);
 			}
-			MyListAdapter adapter = new MyListAdapter(this,this,this, videosList); 
+			MyListAdapter adapter = new MyListAdapter(this, videosList); 
 			listview.setAdapter(adapter); 
 
 		} catch (JSONException joe) { 
@@ -63,16 +54,6 @@ VideoDownloader.Listener
         Toast.makeText(this,"Check internet connection!", Toast.LENGTH_LONG).show(); 
     } 
 	
-    private void refreshList(List<Video> list) { 
-        MyListAdapter myListAdapter = new MyListAdapter((Activity)this, (MyListAdapter.Listener)this, (VideoDownloader.Listener)this, list); 
-        listview.setAdapter((ListAdapter)myListAdapter); 
-    } 
-	
-	@Override 
-    public void OnVideoRemoved(List<Video> list) { 
-        refreshList(list); 
-    } 
-
     public <T extends View> T from(int n) { 
         return (T)findViewById(n); 
     } 

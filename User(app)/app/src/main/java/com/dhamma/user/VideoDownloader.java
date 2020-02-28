@@ -7,17 +7,16 @@ import android.widget.*;
 import java.io.*;
 import java.net.*;
 
-public class VideoDownloader 
-extends AsyncTask<String, Integer, String> { 
+public class VideoDownloader extends AsyncTask<String, Integer, String> { 
     private Context context; 
-    Listener listener; 
     ProgressDialog mProgressDialog; 
     Video video; 
+	MyListAdapter adapter;
 
-    public VideoDownloader(Context context, Listener listener, Video video) { 
+    public VideoDownloader(Context context, MyListAdapter adapter, Video video) { 
         this.context = context; 
-        this.video = video; 
-        this.listener = listener; 
+        this.video = video;
+		this.adapter = adapter;
         init(); 
     } 
 
@@ -94,8 +93,8 @@ extends AsyncTask<String, Integer, String> {
             Toast.makeText(context,"Download error: " + result, Toast.LENGTH_LONG).show(); 
             return; 
         } 
-        Toast.makeText(context,"Video downloaded",Toast.LENGTH_LONG).show(); 
-        listener.OnVideoDownloded(); 
+        Toast.makeText(context,"Video downloaded",Toast.LENGTH_LONG).show();
+		adapter.notifyDataSetChanged();
     } 
 
     @Override 
@@ -111,8 +110,4 @@ extends AsyncTask<String, Integer, String> {
         mProgressDialog.setMax(100); 
         mProgressDialog.setProgress(values[0]); 
     }
-	
-    interface Listener { 
-        public void OnVideoDownloded(); 
-    } 
 }

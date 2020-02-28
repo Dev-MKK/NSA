@@ -9,8 +9,7 @@ import java.util.*;
 import org.json.*;
 
 public class AdminVideosActivity extends Activity 
-implements JsonGetter.Listener, 
-MyListAdapter.Listener 
+implements JsonGetter.Listener
 { 
     ListView listview; 
 
@@ -31,7 +30,7 @@ MyListAdapter.Listener
             	video.date = jo.getString("date"); 
             	videos.add(video);
 			}
-			MyListAdapter adapter = new MyListAdapter(this,this, videos); 
+			MyListAdapter adapter = new MyListAdapter(this, videos); 
 			listview.setAdapter(adapter); 
 			
 		} catch (JSONException joe) { 
@@ -42,26 +41,13 @@ MyListAdapter.Listener
 	@Override 
     protected void onCreate(Bundle bundle) { 
         super.onCreate(bundle); 
-        this.setContentView(R.layout.videos); 
+        setContentView(R.layout.videos); 
         listview = from(R.id.lv); 
         new JsonGetter(this).execute(); 
-    } 
-	
-    @Override 
-    public void OnVideoDeleted(List<Video> list) { 
-        refreshList(list); 
     } 
 
     public <T extends View> T from(int n) { 
         return (T)this.findViewById(n); 
     } 
-
-   
-	
-	private void refreshList(List<Video> list) { 
-        MyListAdapter adapter = new MyListAdapter(this,this, list); 
-        listview.setAdapter(adapter); 
-    } 
-	
 } 
  

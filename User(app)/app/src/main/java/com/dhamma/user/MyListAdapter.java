@@ -9,18 +9,14 @@ import com.bumptech.glide.*;
 import java.io.*;
 import java.util.*;
 
-public class MyListAdapter extends BaseAdapter
-{ 
-    Listener L; 
+public class MyListAdapter extends BaseAdapter { 
+  
     Activity activity; 
-    VideoDownloader.Listener downloadListener; 
     List<Video> videos; 
 
-    public MyListAdapter(Activity activity, Listener l, VideoDownloader.Listener listener, List<Video> list) { 
+    public MyListAdapter(Activity activity, List<Video> list) { 
         this.activity = activity; 
-        this.videos = list; 
-        L = l; 
-        downloadListener = listener; 
+        this.videos = list;
     } 
 
     @Override 
@@ -40,7 +36,6 @@ public class MyListAdapter extends BaseAdapter
 	
 	public View getView(int position, View recycled, ViewGroup parent) { 
         ViewHolder holder = null; 
-        final Video video = videos.get(position); 
         LayoutInflater layoutInflater = (LayoutInflater)this.activity.getSystemService("layout_inflater"); 
         if (recycled == null) { 
             recycled = layoutInflater.inflate(R.layout.list_item, null); 
@@ -51,67 +46,68 @@ public class MyListAdapter extends BaseAdapter
             holder.deleteBtn = (ImageView)recycled.findViewById(R.id.listdelete); 
             holder.downloadBtn = (ImageView)recycled.findViewById(R.id.listdownload); 
             holder.playBtn = (ImageView)recycled.findViewById(R.id.listplay); 
-            holder.progressBar = (ProgressBar)recycled.findViewById(R.id.listprogress); 
-			
+            holder.progressBar = (ProgressBar)recycled.findViewById(R.id.listprogress);
             recycled.setTag(holder); 
-			
-            holder.titleTv.setText((CharSequence)video.title); 
-            holder.typeTv.setText((CharSequence)video.type); 
-            holder.playBtn.setOnClickListener(new OnClickListener(){
-
-					@Override
-					public void onClick(View v)
-					{
-						Intent intent = new Intent(activity, VideoPlayerActivity.class); 
-						intent.putExtra("title", video.title); 
-						intent.putExtra("monk", video.type); 
-						intent.putExtra("url", video.date); 
-						activity.startActivity(intent); 
-					}
-				});
-            holder.downloadBtn.setOnClickListener(new OnClickListener(){
-
-					@Override
-					public void onClick(View v)
-					{
-						v.setVisibility(View.GONE); 
-						new VideoDownloader(activity, downloadListener, video).execute(); 
-					}
-				});
-            holder.deleteBtn.setOnClickListener(new OnClickListener(){
-
-					@Override
-					public void onClick(View v)
-					{
-						Toast.makeText(activity,"Press & Hold to delete.", Toast.LENGTH_LONG).show(); 
-					}
-				});
-            holder.deleteBtn.setOnLongClickListener(new OnLongClickListener(){
-
-					@Override
-					public boolean onLongClick(View v)
-					{
-						File file = new File(activity.getFilesDir() + "/" + video.date);
-						if(file.delete()) {
-							Toast.makeText(activity,"Video deleted from storage. ",Toast.LENGTH_LONG).show(); 
-							L.OnVideoRemoved(videos); 
-						}
-						return true;
-					}
-				});
-            String filename = video.date; 
-            try { 
-                activity.openFileInput(filename).close(); 
-                holder.playBtn.setVisibility(View.VISIBLE); 
-                holder.deleteBtn.setVisibility(View.VISIBLE); 
-            } catch (IOException iOException) { 
-                holder.downloadBtn.setVisibility(View.VISIBLE); 
-            } 
-      
         } else { 
             holder = (ViewHolder)recycled.getTag(); 
         } 
-		String img = video.image;
+		final Video video = videos.get(position); 
+		holder.titleTv.setText((CharSequence)video.title); 
+		holder.typeTv.setText((CharSequence)video.type); 
+		holder.playBtn.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v)
+				{
+					Intent intent = new Intent(activity, VideoPlayerActivity.class); 
+					intent.putExtra("title", video.title); 
+					intent.putExtra("monk", video.type); 
+					intent.putExtra("url", video.date); 
+					activity.startActivity(intent); 
+				}
+			});
+		holder.downloadBtn.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v)
+				{
+					v.setVisibility(View.GONE); 
+					new VideoDownloader(activity, MyListAdapter.this, video).execute(); 
+				}
+			});
+		holder.deleteBtn.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v)
+				{
+					Toast.makeText(activity,"Press & Hold to delete.", Toast.LENGTH_LONG).show(); 
+				}
+			});
+		holder.deleteBtn.setOnLongClickListener(new OnLongClickListener(){
+
+				@Override
+				public boolean onLongClick(View v)
+				{
+					File file = new File(activity.getFilesDir() + "/" + video.date);
+					if(file.delete()) {
+						Toast.makeText(activity,"Video deleted from storage. ",Toast.LENGTH_LONG).show(); 
+						notifyDataSetChanged();
+					}
+					return true;
+				}
+			});
+		String filename = video.date; 
+		try { 
+			activity.openFileInput(filename).close(); 
+			holder.playBtn.setVisibility(View.VISIBLE); 
+			holder.deleteBtn.setVisibility(View.VISIBLE); 
+			holder.downloadBtn.setVisibility(View.GONE);
+		} catch (IOException iOException) { 
+			holder.downloadBtn.setVisibility(View.VISIBLE); 
+			holder.playBtn.setVisibility(View.GONE); 
+			holder.deleteBtn.setVisibility(View.GONE); 
+		} 
+		String img = videos.get(position).image;
         if (!img.isEmpty() && img.startsWith("http")) { 
             Glide.with(activity)
 				.load(img)
@@ -121,10 +117,6 @@ public class MyListAdapter extends BaseAdapter
 				.into(holder.imageView); 
         } 
         return recycled; 
-    } 
-	
-	static interface Listener { 
-        public void OnVideoRemoved(List<Video> list); 
     } 
 
     private class ViewHolder { 
