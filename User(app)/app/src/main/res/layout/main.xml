@@ -3,12 +3,42 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent"
+	android:background="#755A59">
+
+	<RelativeLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:background="#000000">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="User: 09765457432"
+			android:layout_margin="5dp"
+			android:textColor="#FFFFFF"
+			android:textSize="14sp"
+			android:gravity="center"
+			android:id="@+id/userTv"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="Balance: 10000 Ks"
+			android:layout_alignParentRight="true"
+			android:layout_margin="5dp"
+			android:textSize="14sp"
+			android:textColor="#FBF9F9"
+			android:id="@+id/creditsTv"
+			android:gravity="center"/>
+
+	</RelativeLayout>
 
 	<ListView
 		android:id="@+id/lv"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:layout_margin="5dp"/>
 
 </LinearLayout>
 

@@ -9,14 +9,16 @@ import com.bumptech.glide.*;
 import java.io.*;
 import java.util.*;
 
-public class MyListAdapter extends BaseAdapter { 
-  
+public class MyListAdapter extends BaseAdapter 
+{
+
     Activity activity; 
     List<Video> videos; 
 
     public MyListAdapter(Activity activity, List<Video> list) { 
         this.activity = activity; 
         this.videos = list;
+	
     } 
 
     @Override 
@@ -71,8 +73,11 @@ public class MyListAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v)
 				{
-					v.setVisibility(View.GONE); 
-					new VideoDownloader(activity, MyListAdapter.this, video).execute(); 
+					if(Setting.USER.credits <= 0) {
+						MyDialog.showTopupInfoDialog(activity);
+					} else {
+						new VideoDownloader(activity, MyListAdapter.this, video).execute(); 
+					}
 				}
 			});
 		holder.deleteBtn.setOnClickListener(new OnClickListener(){

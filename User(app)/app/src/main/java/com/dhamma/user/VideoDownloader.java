@@ -7,16 +7,30 @@ import android.widget.*;
 import java.io.*;
 import java.net.*;
 
-public class VideoDownloader extends AsyncTask<String, Integer, String> { 
+public class VideoDownloader extends AsyncTask<String, Integer, String> 
+implements CreditsHandler.Listener
+{
+	@Override
+	public void OnCreditsUpdated(String result) {
+		try {
+			Setting.USER.credits = Integer.parseInt(result);
+			((TextView)((Activity)context).findViewById(R.id.creditsTv)).setText(Setting.USER.credits + " Ks");
+			Toast.makeText(context,"50 Ks has been deducted!",Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+		}
+	}
+	
     private Context context; 
     ProgressDialog mProgressDialog; 
     Video video; 
 	MyListAdapter adapter;
 
-    public VideoDownloader(Context context, MyListAdapter adapter, Video video) { 
+    public VideoDownloader(Context context ,MyListAdapter adapter, Video video) { 
         this.context = context; 
         this.video = video;
 		this.adapter = adapter;
+		
         init(); 
     } 
 
@@ -62,6 +76,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> {
 					input.close();
 					return null;
 				}
+				
 				total += count;
 				// publishing the progress....
 				if (fileLength > 0) // only if total length is known
@@ -102,12 +117,24 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> {
         super.onPreExecute(); 
         mProgressDialog.show(); 
     }
-
+	
+	boolean once = false;
+	
 	@Override
 	protected void onProgressUpdate(Integer...values) {
 		super.onProgressUpdate(values); 
         mProgressDialog.setIndeterminate(false); 
         mProgressDialog.setMax(100); 
         mProgressDialog.setProgress(values[0]); 
+		if(!once && values[0] == 10) {
+			once = !once;
+			CreditsHandler ch = new CreditsHandler(this);
+			ch.executeOnExecutor(THREAD_POOL_EXECUTOR);
+		}
     }
 }
+
+
+
+	
+	

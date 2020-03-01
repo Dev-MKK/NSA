@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:gravity="center"
 	android:orientation="vertical"
-	android:background="#755A59"
+	android:background="#176C9D"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
@@ -12,24 +12,24 @@
 		android:textColor="#ffffffff"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="User Panel Demo"/>
+		android:text="Account Topup Demo"/>
 
 	<TextView
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		android:layout_margin="10dp"
-		android:textColor="#95FE24"
-		android:textSize="13sp"
-		android:id="@+id/logintv"/>
+		android:textSize="14sp"
+		android:textColor="#FFE100"
+		android:id="@+id/tptv"/>
 
 	<EditText
-		android:id="@+id/phone"
+		android:id="@+id/tpphone"
 		android:background="#000000"
 		android:padding="10.0dip"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="10.0dip"
-		android:hint="Your Phone Numer"
+		android:hint="Account Phone Numer"
 		android:ems="10"
 		android:singleLine="true"
 		android:inputType="phone"
@@ -37,23 +37,24 @@
 		android:textColorHint="#9F9F93"/>
 
 	<EditText
-		android:id="@+id/password"
+		android:id="@+id/tpamount"
 		android:background="#000000"
 		android:padding="10.0dip"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:hint="Password"
+		android:hint="Amount"
 		android:ems="10"
 		android:textColor="#FFFFFF"
-		android:textColorHint="#9F9F93"/>
+		android:textColorHint="#9F9F93"
+		android:inputType="number|phone"/>
 
 	<Button
 		android:textColor="#ffffffff"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="10.0dip"
-		android:text="Log In"
-		android:onClick="logIn"/>
+		android:text="Topup Now"
+		android:onClick="topup"/>
 
 </LinearLayout>
 

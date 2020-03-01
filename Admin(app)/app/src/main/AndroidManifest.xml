@@ -21,5 +21,8 @@
 		<activity 
 			android:label="Videos Gallery" 
 			android:name=".AdminVideosActivity" />
+		<activity 
+			android:label="Topup" 
+			android:name=".TopupActivity" />
 	</application>
 </manifest>

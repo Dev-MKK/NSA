@@ -34,6 +34,8 @@ implements ServerConnector.Listener {
 	
 	@Override 
     protected void onCreate(Bundle bundle) { 
+	
+		requestWindowFeature(Window.FEATURE_NO_TITLE); 
         super.onCreate(bundle); 
         setContentView(R.layout.main); 
         titleEdt = from(R.id.title); 
@@ -80,6 +82,10 @@ implements ServerConnector.Listener {
             return; 
         } 
         startActivity(new Intent(this,AdminVideosActivity.class)); 
+    } 
+	
+	public void toTopup(View view) { 
+        startActivity(new Intent(this,TopupActivity.class)); 
     } 
 } 
  

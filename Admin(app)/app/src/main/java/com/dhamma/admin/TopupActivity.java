@@ -1,7 +1,7 @@
-package com.dhamma.user;
+package com.dhamma.admin;
+
 
 import android.app.*;
-import android.content.*;
 import android.content.pm.*;
 import android.os.*;
 import android.view.*;
@@ -10,70 +10,66 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.net.ssl.*;
-import org.json.*;
 
-public class LogInActivity extends Activity {
-	
-	EditText phoneEdt, passwordEdt;
+public class TopupActivity extends Activity
+{
+
+	EditText phoneEdt, amountEdt;
 	TextView tv;
-   
+
     @Override 
     protected void onCreate(Bundle bundle) { 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); 
         requestWindowFeature(Window.FEATURE_NO_TITLE); 
         super.onCreate(bundle); 
-		
-        setContentView(R.layout.login); 
-		
-		phoneEdt = from(R.id.phone);
-		passwordEdt = from(R.id.password);
-		tv = from(R.id.logintv);
+
+        setContentView(R.layout.topup); 
+
+		phoneEdt = from(R.id.tpphone);
+		amountEdt = from(R.id.tpamount);
+		tv = from(R.id.tptv);
     } 
-	
-	public void logIn(View view) { 
-	
+
+	public void topup(View view) { 
+
 		String phone = phoneEdt.getText().toString();
-		String password = passwordEdt.getText().toString();
-		if(phone.isEmpty() || password.isEmpty()) {
-			Toast.makeText(this,"Fill your login details",Toast.LENGTH_LONG).show();
+		String amount = amountEdt.getText().toString();
+		if(phone.isEmpty() || amount.isEmpty()) {
+			Toast.makeText(this,"Fill all data.",Toast.LENGTH_LONG).show();
 			return;
 		}
 		if(!NetworkChecker.isInternetOn(this)) {
 			Toast.makeText(this,"Check internet connection",Toast.LENGTH_LONG).show();
 			return;
 		}
-		
-		tv.setText("Logging in...");
-        String api = Setting.BASE_URL + Setting.USER_LOGIN_PHP; 
-		HashMap<String,String> postData = new HashMap<>(); 
-		postData.put("phone", phone); 
-		postData.put("password", password); 
-		new LoginConnector(api,postData).execute(); 
-		
+		tv.setText("Topping up...");
+      	new Topupper().execute();
     } 
 	
+
 	public <T extends View> T from(int n) { 
         return (T)findViewById(n); 
     } 
 	
-	/// Inner class
+	// Inner class
 
-	public class LoginConnector extends AsyncTask<Void, Void, String> { 
-		
-		HashMap<String, String> postDataParams; 
-		String server; 
+	private class Topupper extends AsyncTask <Void, Void, String> { 
 
-		public LoginConnector( String url, HashMap<String, String> postData) { 
-		
-			server = url; 
-			postDataParams = postData; 
+		public Topupper() {
+	
 		}
 
 		@Override
 		protected String doInBackground(Void...v){
+
+			String api = Setting.BASE_URL + Setting.ADMIN_TOPUP_PHP;
+			HashMap<String,String> postData = new HashMap<>(); 
+			postData.put("phone", phoneEdt.getText().toString());
+			postData.put("amount", amountEdt.getText().toString());
+
 			StringBuilder sb = new StringBuilder();
 			try {
-				URL url = new URL(server);
+				URL url = new URL(api);
 
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setReadTimeout(1500000);
@@ -84,7 +80,7 @@ public class LogInActivity extends Activity {
 
 				OutputStream os = conn.getOutputStream();
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-				writer.write(formatPostData(postDataParams));
+				writer.write(formatPostData(postData));
 
 				writer.flush();
 				writer.close();
@@ -127,23 +123,12 @@ public class LogInActivity extends Activity {
 
 		@Override 
 		protected void onPostExecute(String result) { 
-			try
-			{
-				JSONObject jo = new JSONObject(result);
-				User user = new User();
-				user.phone = jo.getString("phone");
-				user.credits = jo.getInt("credits");
-				Setting.USER = user;
-				startActivity(new Intent(LogInActivity.this,MyVideosActivity.class)); 
-				finish(); 
-			} catch (JSONException je) {
-				tv.setText("Login error. Try again!");
-				Toast.makeText(LogInActivity.this,result,Toast.LENGTH_LONG).show();
+			if(result.contains("topupok")) {
+				tv.setText("Account topped up.");
+				amountEdt.setText("");
+			} else {
+				tv.setText(result);
 			}
 		} 
-
-		
 	} // Inner class
-
-	
 } 

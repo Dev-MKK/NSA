@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:gravity="center"
+	android:background="#755A59">
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="Topup Your Account"
+		android:gravity="center"
+		android:textSize="15sp"
+		android:padding="8dp"
+		android:background="#000000"
+		android:textColor="#FFFFFF"/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:text="Your account's credits is 0 Ks. Topup your account to continue downloading videos. Call phone to service provider how to topup."
+		android:textSize="16sp"
+		android:gravity="center"
+		android:padding="8dp"
+		android:textColor="#FFFFFF"/>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center"
+		android:background="#000000">
+
+		<Button
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="Cancel"
+			android:layout_margin="5dp"
+			android:id="@+id/topup_cancel_btn"
+			android:textColor="#FFFFFF"/>
+
+		<Button
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="Call Phone"
+			android:id="@+id/topup_call_btn"
+			android:textColor="#FFFFFF"/>
+
+	</LinearLayout>
+
+</LinearLayout>
+

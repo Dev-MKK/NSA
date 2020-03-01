@@ -1,6 +1,7 @@
 package com.dhamma.user;
 
 import android.app.*;
+import android.content.pm.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
@@ -9,7 +10,9 @@ import org.json.*;
 
 public class MyVideosActivity extends Activity 
 implements JsonGetter.Listener
+
 {
+	
 	@Override
 	public void OnJsonGot(String result)
 	{
@@ -36,16 +39,25 @@ implements JsonGetter.Listener
 		}
 	}
 	
-
+	TextView userTv, creditsTv;
     ListView listview; 
     List<Video> videosList; 
 
 	@Override 
     protected void onCreate(Bundle bundle) { 
+		
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); 
+        requestWindowFeature(Window.FEATURE_NO_TITLE); 
+		
         super.onCreate(bundle); 
         setContentView(R.layout.main); 
         
+		userTv = from(R.id.userTv);
+		creditsTv = from(R.id.creditsTv);
 		listview = from(R.id.lv); 
+		
+		userTv.setText(Setting.USER.phone);
+		creditsTv.setText(Setting.USER.credits + " Ks");
 		
         if (NetworkChecker.isInternetOn(this)) { 
             new JsonGetter(this).execute(); 
